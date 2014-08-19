@@ -78,7 +78,7 @@ http_callback_write(httpd *webserver, request *r)
 			char    tmp[256] = {0};
 			strcat(content, "GatewayID pubinfo\n\n");
 			strcat(content, "GatewayInterface br-lan\n\n");
-			sprintf(tmp, "DevID %s\n", dev_id);
+			sprintf(tmp, "DevID %s\n", dev_id->value);
 			strcat(content, tmp);
 
 			strcat(content, "AuthServer {\n");
