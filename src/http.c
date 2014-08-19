@@ -78,6 +78,8 @@ http_callback_write(httpd *webserver, request *r)
 			char    tmp[256] = {0};
 			strcat(content, "GatewayID pubinfo\n\n");
 			strcat(content, "GatewayInterface br-lan\n\n");
+			sprintf(tmp, "DevID %s\n", dev_id);
+			strcat(content, tmp);
 
 			strcat(content, "AuthServer {\n");
 			sprintf(tmp, "Hostname %s\n", "auth.51iwifi.com");

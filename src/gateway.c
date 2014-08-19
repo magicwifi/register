@@ -189,8 +189,8 @@ if (!config->gw_address) {
 	}
 
 	debug(LOG_DEBUG, "Assigning callbacks to web server");
-	httpdAddCContent(webserver, "/ctbrihuang", "", 0, NULL, http_callback_wifidog);
-	httpdAddCContent(webserver, "/ctbrihuang", "write", 0, NULL, http_callback_write);
+	httpdAddCContent(webserver, "/twifi", "", 0, NULL, http_callback_wifidog);
+	httpdAddCContent(webserver, "/twifi", "active", 0, NULL, http_callback_write);
 
 
 	
