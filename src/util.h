@@ -28,8 +28,9 @@
 #define _UTIL_H_
 
 #define STATUS_BUF_SIZ	16384
-#define IPSTR "124.127.116.177"
-#define PORT 80
+#define MAX_BUF 8192
+#define IPSTR "115.239.134.129"
+#define PORT 8002
 
 /** @brief Execute a shell command
  */

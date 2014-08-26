@@ -38,6 +38,6 @@ typedef struct _auth_conf_t {
     int authserv_use_ssl;	/**< @brief Use SSL or not */
 } t_auth_conf;
 
-int register_conf();
+int register_conf(const char *dev_id);
 
 #endif

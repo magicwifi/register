@@ -47,7 +47,6 @@
 #include "common.h"
 #include "httpd.h"
 #include "conf.h"
-#include "cJSON.h"
 #include "fetchconf.h"
 
 #include "util.h"
@@ -66,96 +65,20 @@ void
 http_callback_write(httpd *webserver, request *r)
 {
 
-	t_auth_conf	*authserver;
-    	cJSON *json ;
 	httpVar * dev_id = httpdGetVariableByName(r, "dev_id");
 	if(dev_id ){
-		authserver =(t_auth_conf *)malloc(sizeof(t_auth_conf));
-		int result = register_conf(authserver,json,dev_id->value);
-	
+		debug(LOG_DEBUG, "get device id");
+		int result = register_conf(dev_id->value);
 		if (result ==1 ) {	
-			char    content[4096] = {0};
-			char    tmp[256] = {0};
-			strcat(content, "GatewayID pubinfo\n\n");
-			strcat(content, "GatewayInterface br-lan\n\n");
-			sprintf(tmp, "DevID %s\n", dev_id->value);
-			strcat(content, tmp);
-
-			strcat(content, "AuthServer {\n");
-			sprintf(tmp, "Hostname %s\n", "auth.51iwifi.com");
-			strcat(content, tmp);
-			if(authserver->authserv_use_ssl){
-				strcat(content, "SSLAvailable Yes  \n");
-			}else{
-				strcat(content, "SSLAvailable No \n");
-			}
-			sprintf(tmp, "Path %s\n", authserver->authserv_path);
-			strcat(content, tmp);
-			strcat(content, "}\n\n");
-
-			strcat(content, "PlatformServer {\n");
-			sprintf(tmp, "Hostname %s\n", "www.51iwifi.com");
-			strcat(content, tmp);
-			sprintf(tmp, "Path %s\n", "/");
-			strcat(content, tmp);
-			sprintf(tmp, "HttpPort %d\n", 80);
-			strcat(content, tmp);
-			strcat(content, "SSLAvailable No \n");
-			sprintf(tmp, "SSLPort %d\n", 443);
-			strcat(content, tmp);
-			strcat(content, "}\n\n");
-
-			strcat(content, "PortalServer {\n");
-			sprintf(tmp, "Hostname %s\n", "portal.51iwifi.com");
-			strcat(content, tmp);
-			sprintf(tmp, "Path %s\n", "/site/");
-			strcat(content, tmp);
-			sprintf(tmp, "HttpPort %d\n", 80);
-			strcat(content, tmp);
-			strcat(content, "SSLAvailable No \n");
-			sprintf(tmp, "SSLPort %d\n", 443);
-			strcat(content, tmp);
-			strcat(content, "}\n\n");
-
-			strcat(content, "FirewallRuleSet global {\n"
-					"     FirewallRule allow to 117.34.78.204\n"
-					"     FirewallRule allow to 124.127.116.177\n"
-					"     FirewallRule allow to 122.229.30.31\n"
-					"}\n\n");
-			strcat(content, "FirewallRuleSet validating-users {\n"
-					"    FirewallRule allow to 0.0.0.0/0\n"
-					"}\n\n");
-
-			strcat(content, "FirewallRuleSet known-users {\n"
-					"     FirewallRule allow to 0.0.0.0/0\n"
-					"}\n\n");
-
-			strcat(content, "FirewallRuleSet unknown-users {\n"
-					"    FirewallRule allow udp port 53\n"
-					"    FirewallRule allow tcp port 53\n"
-					"    FirewallRule allow udp port 67\n"
-					"    FirewallRule allow tcp port 67\n"
-					"}\n\n");
-
-			strcat(content, "FirewallRuleSet locked-users {\n"
-					"     FirewallRule block to 0.0.0.0/0\n"
-					"}\n\n");
-
-			FILE *fp;
-			fp = fopen( "/etc/wifidog.conf" , "w" );
-			fwrite(content , 1 , sizeof(content) , fp );
-
-			fclose(fp);
-
-			free(authserver);
 			send_http_page(r, "云WiFi", "<p>注册成功</p>");
 			exit(1);
 		}else{
-		free(authserver);
-		send_http_page(r, "WiFiDog error", "Invalid token");
+			debug(LOG_DEBUG, "unable register");
+			send_http_page(r, "WiFiDog error", "Invalid token");
 		} 
 	}
 	else{
+		debug(LOG_DEBUG, "fail get device id");
 		send_http_page(r, "WiFiDog error", "Invalid token");
 	}
 }
