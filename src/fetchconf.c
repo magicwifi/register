@@ -100,7 +100,7 @@ if ((fh = fopen("/proc/sys/kernel/hostname", "r"))) {
 		     "active",
 		config_get_config()->gw_id,
 		    "1.1",
-		    hostname);
+		    "test-auth1.51wifi.com");
 
 	debug(LOG_DEBUG, "connect %s \n" ,request);
     send(sock, request, strlen(request), 0);
@@ -160,7 +160,8 @@ if (!json) {
 
 			sprintf(tmp, "DevID %s\n",cJSON_GetObjectItem(service,"device_id")->valuestring);
 			strcat(content,tmp);
-			strcat(content, "GatewayID pubinfo\n\n");
+			sprintf(tmp, "GatewayID %s\n", hostname);
+			strcat(content, tmp);
 			strcat(content, "GatewayInterface br-lan\n\n");
 
 			cJSON *servers = cJSON_GetObjectItem(service,"servers");
