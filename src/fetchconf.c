@@ -80,14 +80,6 @@ int register_conf(const char *dev_id){
     }
 
 	debug(LOG_DEBUG, "begin connect");
-    char *hostname = safe_malloc(100);	
-if ((fh = fopen("/proc/sys/kernel/hostname", "r"))) {
-		if(fscanf(fh, "%s", hostname) != 1){
-			debug(LOG_CRIT, "Failed to read loadhostname");
-				return -1;
-			}
-		fclose(fh);
-	}
 
 
     snprintf(request, sizeof(request) - 1,
@@ -160,8 +152,8 @@ if (!json) {
 
 			sprintf(tmp, "DevID %s\n",cJSON_GetObjectItem(service,"device_id")->valuestring);
 			strcat(content,tmp);
-			sprintf(tmp, "GatewayID %s\n", hostname);
-			strcat(content, tmp);
+			//sprintf(tmp, "GatewayID %s\n", hostname);
+			//strcat(content, tmp);
 			strcat(content, "GatewayInterface br-lan\n\n");
 
 			cJSON *servers = cJSON_GetObjectItem(service,"servers");
@@ -246,7 +238,6 @@ if (!json) {
     }
 
     free(safe_dev_id);
-    free(hostname);
 
     close(sock);
     return result;
